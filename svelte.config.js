@@ -8,10 +8,9 @@ const config = {
 	},
 	kit: {
 		paths: {
-			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+			base: process.argv.includes('dev') ? '' : '/memory'
 		},
 		adapter: adapter({
-			fallback: 'index.html', // This makes it an SPA
 			strict: true
 		})
 	}
