@@ -15,23 +15,29 @@
 	}
 </script>
 
-<div class="flex flex-col min-h-screen">
+<div class="flex min-h-screen flex-col">
 	<Header title="Difficulty" showBack={true} />
 
-	<main class="flex-1 flex flex-col p-6 w-full max-w-md mx-auto mt-4">
-		<h2 class="text-3xl font-display font-bold text-[var(--color-on-surface)] mb-8 tracking-tight">Select your challenge</h2>
-		
+	<main class="mx-auto mt-4 flex w-full max-w-md flex-1 flex-col p-6">
+		<h2 class="mb-8 font-display text-3xl font-bold tracking-tight text-[var(--color-on-surface)]">
+			Select your challenge
+		</h2>
+
 		<div class="flex flex-col gap-4">
-			{#each difficulties as diff}
+			{#each difficulties as diff (diff.id)}
 				<button
-					class="flex items-center justify-between p-6 w-full rounded-3xl bg-[var(--color-surface-container-low)] hover:bg-[var(--color-surface-container)] transition-all duration-300 active:scale-[0.98] text-left border-2 border-transparent hover:border-[var(--color-primary-container)]/50 focus:outline-none"
+					class="flex w-full items-center justify-between rounded-3xl border-2 border-transparent bg-[var(--color-surface-container-low)] p-6 text-left transition-all duration-300 hover:border-[var(--color-primary-container)]/50 hover:bg-[var(--color-surface-container)] focus:outline-none active:scale-[0.98]"
 					onclick={() => selectDifficulty(diff.id)}
 				>
 					<div class="flex flex-col gap-1 pr-4">
 						<span class="text-xl font-bold text-[var(--color-on-surface)]">{diff.label}</span>
-						<span class="text-sm font-medium text-[var(--color-on-surface-variant)]">{diff.desc}</span>
+						<span class="text-sm font-medium text-[var(--color-on-surface-variant)]"
+							>{diff.desc}</span
+						>
 					</div>
-					<div class="flex-shrink-0 w-12 h-12 rounded-[1rem] bg-[var(--color-primary-container)]/30 flex items-center justify-center text-sm font-bold text-[var(--color-primary)]">
+					<div
+						class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-[1rem] bg-[var(--color-primary-container)]/30 text-sm font-bold text-[var(--color-primary)]"
+					>
 						{diff.size}
 					</div>
 				</button>
