@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="grid gap-3 w-full max-w-3xl mx-auto px-4"
+	class="mx-auto grid w-full max-w-3xl gap-3 px-4"
 	style="grid-template-columns: repeat({columns}, minmax(0, 1fr));"
 >
 	{@render children()}
