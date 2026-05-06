@@ -8,7 +8,7 @@ const config = {
 	},
 	kit: {
 		paths: {
-			base: process.argv.includes('dev') ? '' : '/memory'
+			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
 		},
 		adapter: adapter({
 			strict: true
