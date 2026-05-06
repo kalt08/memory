@@ -6,6 +6,8 @@
 
 	let email = $state('');
 	let password = $state('');
+	let fullName = $state('');
+	let username = $state('');
 	let isSignUp = $state(false);
 	let loading = $state(false);
 	let errorMsg = $state('');
@@ -20,7 +22,13 @@
 		if (isSignUp) {
 			const { error } = await supabase.auth.signUp({
 				email,
-				password
+				password,
+				options: {
+					data: {
+						full_name: fullName,
+						username: username
+					}
+				}
 			});
 			if (error) {
 				errorMsg = error.message;
@@ -28,6 +36,8 @@
 				successMsg = 'Check your email to confirm your account!';
 				isSignUp = false;
 				password = '';
+				fullName = '';
+				username = '';
 			}
 		} else {
 			const { error } = await supabase.auth.signInWithPassword({
@@ -56,6 +66,36 @@
 		</p>
 
 		<form class="flex flex-col gap-5" onsubmit={handleSubmit}>
+			{#if isSignUp}
+				<div class="flex flex-col gap-2">
+					<label for="fullName" class="text-sm font-bold text-[var(--color-on-surface)]"
+						>Full Name</label
+					>
+					<input
+						id="fullName"
+						type="text"
+						bind:value={fullName}
+						required
+						placeholder="John Doe"
+						class="w-full rounded-2xl border border-transparent bg-[var(--color-surface-container-low)] px-5 py-4 text-[var(--color-on-surface)] transition-all placeholder:text-[var(--color-on-surface-variant)] hover:border-[var(--color-outline-variant)]/50 focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none"
+					/>
+				</div>
+
+				<div class="flex flex-col gap-2">
+					<label for="username" class="text-sm font-bold text-[var(--color-on-surface)]"
+						>Username</label
+					>
+					<input
+						id="username"
+						type="text"
+						bind:value={username}
+						required
+						placeholder="johndoe123"
+						class="w-full rounded-2xl border border-transparent bg-[var(--color-surface-container-low)] px-5 py-4 text-[var(--color-on-surface)] transition-all placeholder:text-[var(--color-on-surface-variant)] hover:border-[var(--color-outline-variant)]/50 focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none"
+					/>
+				</div>
+			{/if}
+
 			<div class="flex flex-col gap-2">
 				<label for="email" class="text-sm font-bold text-[var(--color-on-surface)]">Email</label>
 				<input
@@ -109,6 +149,8 @@
 					isSignUp = !isSignUp;
 					errorMsg = '';
 					successMsg = '';
+					fullName = '';
+					username = '';
 				}}
 			>
 				{isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
