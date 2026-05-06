@@ -3,38 +3,38 @@
 @plugin '@tailwindcss/typography';
 
 @theme {
-  --color-primary: #00685a;
-  --color-primary-container: #8deedb;
-  --color-on-primary: #c1fff1;
-  --color-surface: #f6f7f7;
-  --color-surface-container-low: #eff1f1;
-  --color-surface-container: #e6e8e9;
-  --color-surface-container-high: #e0e3e3;
-  --color-surface-container-highest: #daddde;
-  --color-surface-container-lowest: #ffffff;
-  --color-on-surface: #2c2f2f;
-  --color-on-surface-variant: #595c5c;
-  --color-outline-variant: #acadad;
-  --font-sans: 'Be Vietnam Pro', sans-serif;
-  --font-display: 'Plus Jakarta Sans', sans-serif;
+	--color-primary: #00685a;
+	--color-primary-container: #8deedb;
+	--color-on-primary: #c1fff1;
+	--color-surface: #f6f7f7;
+	--color-surface-container-low: #eff1f1;
+	--color-surface-container: #e6e8e9;
+	--color-surface-container-high: #e0e3e3;
+	--color-surface-container-highest: #daddde;
+	--color-surface-container-lowest: #ffffff;
+	--color-on-surface: #2c2f2f;
+	--color-on-surface-variant: #595c5c;
+	--color-outline-variant: #acadad;
+	--font-sans: 'Be Vietnam Pro', sans-serif;
+	--font-display: 'Plus Jakarta Sans', sans-serif;
 }
 
 @layer base {
-  :root {
-    background-color: var(--color-surface);
-    color: var(--color-on-surface);
-    font-family: var(--font-sans);
-  }
-  
-  .dark {
-    --color-surface: #121212;
-    --color-surface-container-low: #1e1e1e;
-    --color-surface-container: #2c2f2f;
-    --color-surface-container-high: #3d4040;
-    --color-surface-container-highest: #4f5252;
-    --color-surface-container-lowest: #000000;
-    --color-on-surface: #f6f7f7;
-    --color-on-surface-variant: #acadad;
-    --color-outline-variant: #595c5c;
-  }
+	:root {
+		background-color: var(--color-surface);
+		color: var(--color-on-surface);
+		font-family: var(--font-sans);
+	}
+
+	.dark {
+		--color-surface: #121212;
+		--color-surface-container-low: #1e1e1e;
+		--color-surface-container: #2c2f2f;
+		--color-surface-container-high: #3d4040;
+		--color-surface-container-highest: #4f5252;
+		--color-surface-container-lowest: #000000;
+		--color-on-surface: #f6f7f7;
+		--color-on-surface-variant: #acadad;
+		--color-outline-variant: #595c5c;
+	}
 }
