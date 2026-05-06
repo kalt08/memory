@@ -141,7 +141,7 @@
 				</div>
 			{/if}
 
-			<Button variant="primary" class="mt-4 w-full text-lg" disabled={loading}>
+			<Button type="submit" variant="primary" class="mt-4 w-full text-lg" disabled={loading}>
 				{loading ? 'Processing...' : isSignUp ? 'Sign Up' : 'Sign In'}
 			</Button>
 		</form>
