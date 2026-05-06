@@ -11,7 +11,9 @@
 	<title>Memory Joy</title>
 </svelte:head>
 
-<div class="min-h-screen bg-[var(--color-surface)] text-[var(--color-on-surface)] transition-colors duration-300 font-sans selection:bg-[var(--color-primary-container)] selection:text-[var(--color-on-surface)]">
+<div
+	class="min-h-screen bg-[var(--color-surface)] font-sans text-[var(--color-on-surface)] transition-colors duration-300 selection:bg-[var(--color-primary-container)] selection:text-[var(--color-on-surface)]"
+>
 	{#if appState.currentScreen === 'home'}
 		<HomeScreen />
 	{:else if appState.currentScreen === 'category'}
