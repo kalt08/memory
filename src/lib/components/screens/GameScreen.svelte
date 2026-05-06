@@ -7,7 +7,11 @@
 
 	// Watch for victory
 	$effect(() => {
-		if (!gameState.isPlaying && gameState.cards.length > 0 && gameState.cards.every(c => c.isMatched)) {
+		if (
+			!gameState.isPlaying &&
+			gameState.cards.length > 0 &&
+			gameState.cards.every((c) => c.isMatched)
+		) {
 			// Delay slightly so the user sees the last match before screen change
 			setTimeout(() => {
 				appState.goTo('victory');
@@ -22,26 +26,38 @@
 	}
 </script>
 
-<div class="flex flex-col min-h-screen">
+<div class="flex min-h-screen flex-col">
 	<Header title="Level {gameState.difficulty}" showBack={true} />
 
-	<main class="flex-1 flex flex-col w-full mx-auto pb-12">
+	<main class="mx-auto flex w-full flex-1 flex-col pb-12">
 		<!-- HUD (Heads Up Display) -->
-		<div class="flex justify-between items-center w-full max-w-md mx-auto px-6 mb-8 mt-2">
+		<div class="mx-auto mt-2 mb-8 flex w-full max-w-md items-center justify-between px-6">
 			<div class="flex flex-col">
-				<span class="text-xs uppercase tracking-widest font-bold text-[var(--color-on-surface-variant)]">Moves</span>
-				<span class="text-2xl font-display font-bold text-[var(--color-on-surface)]">{gameState.moves}</span>
+				<span
+					class="text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
+					>Moves</span
+				>
+				<span class="font-display text-2xl font-bold text-[var(--color-on-surface)]"
+					>{gameState.moves}</span
+				>
 			</div>
-			
+
 			<div class="flex flex-col items-end">
-				<span class="text-xs uppercase tracking-widest font-bold text-[var(--color-on-surface-variant)]">Time</span>
-				<span class="text-2xl font-display font-bold text-[var(--color-on-surface)]">{formatTime(gameState.timeSeconds)}</span>
+				<span
+					class="text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
+					>Time</span
+				>
+				<span class="font-display text-2xl font-bold text-[var(--color-on-surface)]"
+					>{formatTime(gameState.timeSeconds)}</span
+				>
 			</div>
 		</div>
 
 		<!-- Game Grid -->
-		<div class="flex-1 flex items-center justify-center">
-			<Grid columns={gameState.difficulty === 'easy' ? 4 : gameState.difficulty === 'medium' ? 6 : 8}>
+		<div class="flex flex-1 items-center justify-center">
+			<Grid
+				columns={gameState.difficulty === 'easy' ? 4 : gameState.difficulty === 'medium' ? 6 : 8}
+			>
 				{#each gameState.cards as card (card.id)}
 					<Card {card} onclick={() => gameState.flipCard(card)} />
 				{/each}
