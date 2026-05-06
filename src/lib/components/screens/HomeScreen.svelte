@@ -4,25 +4,36 @@
 	import { appState } from '$lib/state/app.svelte';
 </script>
 
-<div class="flex flex-col min-h-screen">
+<div class="flex min-h-screen flex-col">
 	<Header title="" showBack={false} />
 
-	<main class="flex-1 flex flex-col items-center justify-center p-6 -mt-20">
-		<div class="w-full max-w-sm flex flex-col items-center gap-12 text-center">
-			<div class="flex flex-col gap-4 relative">
+	<main class="-mt-20 flex flex-1 flex-col items-center justify-center p-6">
+		<div class="flex w-full max-w-sm flex-col items-center gap-12 text-center">
+			<div class="relative flex flex-col gap-4">
 				<!-- Decorative floating elements based on Tactile Joy design -->
-				<div class="absolute -top-8 -left-8 w-16 h-16 bg-[var(--color-primary-container)] rounded-full opacity-50 blur-xl animate-pulse"></div>
-				<div class="absolute -bottom-8 -right-8 w-20 h-20 bg-[var(--color-secondary-container)] rounded-full opacity-50 blur-xl animate-pulse" style="animation-delay: 1s;"></div>
-				
-				<h1 class="text-6xl font-display font-extrabold text-[var(--color-on-surface)] leading-tight tracking-tight relative z-10">
+				<div
+					class="absolute -top-8 -left-8 h-16 w-16 animate-pulse rounded-full bg-[var(--color-primary-container)] opacity-50 blur-xl"
+				></div>
+				<div
+					class="absolute -right-8 -bottom-8 h-20 w-20 animate-pulse rounded-full bg-[var(--color-secondary-container)] opacity-50 blur-xl"
+					style="animation-delay: 1s;"
+				></div>
+
+				<h1
+					class="relative z-10 font-display text-6xl leading-tight font-extrabold tracking-tight text-[var(--color-on-surface)]"
+				>
 					Memory<br />Joy
 				</h1>
-				<p class="text-[var(--color-on-surface-variant)] text-lg font-medium max-w-[240px] mx-auto">
+				<p class="mx-auto max-w-[240px] text-lg font-medium text-[var(--color-on-surface-variant)]">
 					Train your brain with premium tactile cards.
 				</p>
 			</div>
 
-			<Button variant="primary" onclick={() => appState.goTo('category')} class="w-full sm:w-auto mt-4 text-lg">
+			<Button
+				variant="primary"
+				onclick={() => appState.goTo('category')}
+				class="mt-4 w-full text-lg sm:w-auto"
+			>
 				Play Now
 			</Button>
 		</div>
