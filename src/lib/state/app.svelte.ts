@@ -1,9 +1,13 @@
-export type Screen = 'home' | 'category' | 'difficulty' | 'game' | 'victory';
+import type { User } from '@supabase/supabase-js';
+import { supabase } from '$lib/supabase';
+
+export type Screen = 'home' | 'category' | 'difficulty' | 'game' | 'victory' | 'auth';
 export type Theme = 'light' | 'dark';
 
 class AppState {
 	currentScreen = $state<Screen>('home');
 	theme = $state<Theme>('light');
+	user = $state<User | null>(null);
 
 	constructor() {
 		// Initialize theme from localStorage if available, otherwise default to light
@@ -13,6 +17,15 @@ class AppState {
 				this.theme = savedTheme;
 			}
 			this.applyTheme();
+
+			// Initialize Supabase Auth listener
+			supabase.auth.getSession().then(({ data: { session } }) => {
+				this.user = session?.user ?? null;
+			});
+
+			supabase.auth.onAuthStateChange((_event, session) => {
+				this.user = session?.user ?? null;
+			});
 		}
 	}
 
