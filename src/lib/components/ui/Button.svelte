@@ -17,7 +17,8 @@
 		type?: 'button' | 'submit' | 'reset';
 	} = $props();
 
-	const baseClasses = 'inline-flex items-center justify-center transition-all duration-300 font-sans active:scale-95';
+	const baseClasses =
+		'inline-flex items-center justify-center transition-all duration-300 font-sans active:scale-95';
 
 	const variants = {
 		primary:
@@ -31,8 +32,10 @@
 
 <button
 	{type}
-	class="{baseClasses} {variants[variant]} {className} {disabled ? 'opacity-50 cursor-not-allowed active:scale-100' : ''}"
-	onclick={onclick}
+	class="{baseClasses} {variants[variant]} {className} {disabled
+		? 'cursor-not-allowed opacity-50 active:scale-100'
+		: ''}"
+	{onclick}
 	{disabled}
 >
 	{@render children()}
