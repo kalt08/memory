@@ -7,6 +7,9 @@ const config = {
 		runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true)
 	},
 	kit: {
+		paths: {
+			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+		},
 		adapter: adapter({
 			fallback: 'index.html', // This makes it an SPA
 			strict: true
