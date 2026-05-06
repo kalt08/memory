@@ -3,6 +3,7 @@
 	import Header from '$lib/components/ui/Header.svelte';
 	import { appState } from '$lib/state/app.svelte';
 	import { supabase } from '$lib/supabase';
+	import { base } from '$app/paths';
 
 	let email = $state('');
 	let password = $state('');
@@ -24,6 +25,7 @@
 				email,
 				password,
 				options: {
+					emailRedirectTo: window.location.origin + base,
 					data: {
 						full_name: fullName,
 						username: username
@@ -42,7 +44,10 @@
 		} else {
 			const { error } = await supabase.auth.signInWithPassword({
 				email,
-				password
+				password,
+				options: {
+					redirectTo: window.location.origin + base
+				}
 			});
 			if (error) {
 				errorMsg = error.message;
