@@ -110,7 +110,7 @@ class GameState {
 		const pairsCount = diff === 'easy' ? 8 : diff === 'medium' ? 18 : 32;
 
 		const images = this.getImageSet(cat, pairsCount);
-		let generatedCards: Card[] = [];
+		const generatedCards: Card[] = [];
 
 		images.forEach((imgUrl, index) => {
 			const pairId = `pair-${index}`;
@@ -134,14 +134,14 @@ class GameState {
 		// Using consistent seeds or text to simulate different images.
 		const urls: string[] = [];
 		const catNames = cat === 'mixed' ? ['animals', 'nature', 'household'] : [cat];
-		
+
 		for (let i = 0; i < count; i++) {
 			const currentCat = catNames[i % catNames.length];
 			// Unsplash placeholder with seed for consistent images per pair but different images overall
 			// using picsum or placehold.co
 			urls.push(`https://picsum.photos/seed/${currentCat}${i + 1}/400/400`);
 		}
-		
+
 		return urls;
 	}
 }
