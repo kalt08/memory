@@ -26,12 +26,12 @@
 	}
 </script>
 
-<div class="flex min-h-screen flex-col">
+<div class="flex h-[100dvh] flex-col overflow-hidden">
 	<Header title="Level {gameState.difficulty}" showBack={true} />
 
-	<main class="mx-auto flex w-full flex-1 flex-col pb-12">
+	<main class="mx-auto flex w-full flex-1 flex-col overflow-hidden pb-2">
 		<!-- HUD (Heads Up Display) -->
-		<div class="mx-auto mt-2 mb-8 flex w-full max-w-md items-center justify-between px-6">
+		<div class="mx-auto mt-1 mb-3 flex w-full max-w-md items-center justify-between px-6">
 			<div class="flex flex-col">
 				<span
 					class="text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
@@ -54,7 +54,7 @@
 		</div>
 
 		<!-- Game Grid -->
-		<div class="flex flex-1 items-center justify-center">
+		<div class="flex min-h-0 flex-1 items-center justify-center">
 			<Grid
 				columns={gameState.difficulty === 'easy' ? 4 : gameState.difficulty === 'medium' ? 6 : 8}
 			>
