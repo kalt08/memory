@@ -123,7 +123,7 @@ class GameState {
 	}
 
 	private generateCards(diff: Difficulty, cat: Category): Card[] {
-		const pairsCount = diff === 'easy' ? 8 : diff === 'medium' ? 18 : 32;
+		const pairsCount = diff === 'easy' ? 8 : diff === 'medium' ? 18 : 30;
 
 		const emojis = this.getEmojiSet(cat, pairsCount);
 		const generatedCards: Card[] = [];
