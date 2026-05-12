@@ -42,12 +42,9 @@
 				username = '';
 			}
 		} else {
-			const { error } = await supabase.auth.signInWithPassword({
+		const { error } = await supabase.auth.signInWithPassword({
 				email,
-				password,
-				options: {
-					redirectTo: window.location.origin + base
-				}
+				password
 			});
 			if (error) {
 				errorMsg = error.message;
