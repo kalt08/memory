@@ -42,11 +42,9 @@
 			class:ring-[var(--color-primary-container)]={card.isMatched}
 			class:ring-transparent={!card.isMatched}
 		>
-			<img
-				src={card.imageUrl}
-				alt="Memory card"
-				class="h-full w-full rounded-[1.5rem] object-cover p-1 md:rounded-[2rem]"
-			/>
+			<div class="flex h-full w-full items-center justify-center">
+				<span class="select-none text-4xl md:text-5xl lg:text-6xl">{card.emoji}</span>
+			</div>
 			{#if card.isMatched}
 				<div
 					class="animate-in fade-in absolute inset-0 flex items-center justify-center bg-[var(--color-primary-container)]/20 duration-300"
