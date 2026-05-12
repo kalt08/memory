@@ -130,16 +130,24 @@ class GameState {
 	}
 
 	private getImageSet(cat: Category, count: number): string[] {
-		// Return placehold.co images for different categories.
-		// Using consistent seeds or text to simulate different images.
 		const urls: string[] = [];
-		const catNames = cat === 'mixed' ? ['animals', 'nature', 'household'] : [cat];
+		const categories: Category[] = ['animals', 'nature', 'household'];
 
 		for (let i = 0; i < count; i++) {
-			const currentCat = catNames[i % catNames.length];
-			// Unsplash placeholder with seed for consistent images per pair but different images overall
-			// using picsum or placehold.co
-			urls.push(`https://picsum.photos/seed/${currentCat}${i + 1}/400/400`);
+			let currentCat: string;
+
+			if (cat === 'mixed') {
+				// Cycle through all categories for mixed mode
+				currentCat = categories[i % categories.length];
+			} else {
+				currentCat = cat;
+			}
+
+			// Using loremflickr.com for category-specific photos.
+			// The 'lock' parameter ensures we get a unique but consistent image for each index.
+			// We add a random salt to the lock to get different images each time the game starts.
+			const sessionSalt = Math.floor(Math.random() * 1000);
+			urls.push(`https://loremflickr.com/400/400/${currentCat}?lock=${i + sessionSalt}`);
 		}
 
 		return urls;
