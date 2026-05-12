@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	let { columns, children }: { columns: 4 | 6; children: Snippet } = $props();
+	let { columns, children }: { columns: 4 | 6 | 10; children: Snippet } = $props();
 
 	// Smaller gap for denser grids
-	const gap = $derived(columns === 6 ? 'gap-2' : 'gap-3');
+	const gap = $derived(columns === 10 ? 'gap-1.5' : columns === 6 ? 'gap-2' : 'gap-3');
 </script>
 
 <div
