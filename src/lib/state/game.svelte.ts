@@ -4,10 +4,32 @@ export type Category = 'animals' | 'nature' | 'household' | 'mixed';
 export interface Card {
 	id: string;
 	pairId: string;
-	imageUrl: string;
+	emoji: string;
 	isFlipped: boolean;
 	isMatched: boolean;
 }
+
+// Curated emoji sets — each emoji is unique and strictly belongs to its category
+const ANIMAL_EMOJIS = [
+	'🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼',
+	'🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔',
+	'🐧', '🦅', '🦆', '🦉', '🐺', '🐴', '🦄', '🐝',
+	'🦋', '🐌', '🐞', '🐙', '🦈', '🐬', '🐳', '🦩'
+];
+
+const NATURE_EMOJIS = [
+	'🌸', '🌺', '🌻', '🌹', '🌷', '🌲', '🌳', '🌴',
+	'🌵', '🍀', '🍁', '🍂', '🌊', '🏔️', '🌋', '🏝️',
+	'🌅', '🌈', '☀️', '🌙', '⭐', '❄️', '🌾', '🍄',
+	'🪨', '💐', '🌿', '🍃', '🔥', '💧', '🌪️', '⛰️'
+];
+
+const HOUSEHOLD_EMOJIS = [
+	'🪑', '🛋️', '🛏️', '🚿', '🛁', '🧹', '🧺', '🍳',
+	'🥘', '🍽️', '🔪', '☕', '🏺', '🪴', '🕯️', '📺',
+	'💡', '🔑', '🪞', '🧸', '📦', '🧲', '⏰', '🖼️',
+	'🪣', '🧴', '🪥', '🧽', '🫖', '🍶', '🪤', '🧊'
+];
 
 class GameState {
 	difficulty = $state<Difficulty>('easy');
@@ -63,14 +85,12 @@ class GameState {
 		const [card1, card2] = this.currentlyFlipped;
 
 		if (card1.pairId === card2.pairId) {
-			// Match found
 			card1.isMatched = true;
 			card2.isMatched = true;
 			this.currentlyFlipped = [];
 			this.isProcessing = false;
 			this.checkWin();
 		} else {
-			// No match, unflip after delay
 			setTimeout(() => {
 				card1.isFlipped = false;
 				card2.isFlipped = false;
@@ -103,24 +123,20 @@ class GameState {
 	}
 
 	private generateCards(diff: Difficulty, cat: Category): Card[] {
-		// Determine pair count based on difficulty grid sizes:
-		// easy: 4x4 = 16 cards = 8 pairs
-		// medium: 6x6 = 36 cards = 18 pairs
-		// hard: 8x8 = 64 cards = 32 pairs
 		const pairsCount = diff === 'easy' ? 8 : diff === 'medium' ? 18 : 32;
 
-		const images = this.getImageSet(cat, pairsCount);
+		const emojis = this.getEmojiSet(cat, pairsCount);
 		const generatedCards: Card[] = [];
 
-		images.forEach((imgUrl, index) => {
+		emojis.forEach((emoji, index) => {
 			const pairId = `pair-${index}`;
 			generatedCards.push(
-				{ id: `${pairId}-a`, pairId, imageUrl: imgUrl, isFlipped: false, isMatched: false },
-				{ id: `${pairId}-b`, pairId, imageUrl: imgUrl, isFlipped: false, isMatched: false }
+				{ id: `${pairId}-a`, pairId, emoji, isFlipped: false, isMatched: false },
+				{ id: `${pairId}-b`, pairId, emoji, isFlipped: false, isMatched: false }
 			);
 		});
 
-		// Shuffle
+		// Shuffle (Fisher-Yates)
 		for (let i = generatedCards.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1));
 			[generatedCards[i], generatedCards[j]] = [generatedCards[j], generatedCards[i]];
@@ -129,28 +145,36 @@ class GameState {
 		return generatedCards;
 	}
 
-	private getImageSet(cat: Category, count: number): string[] {
-		const urls: string[] = [];
-		const categories: Category[] = ['animals', 'nature', 'household'];
+	private getEmojiSet(cat: Category, count: number): string[] {
+		let pool: string[];
 
-		for (let i = 0; i < count; i++) {
-			let currentCat: string;
-
-			if (cat === 'mixed') {
-				// Cycle through all categories for mixed mode
-				currentCat = categories[i % categories.length];
-			} else {
-				currentCat = cat;
+		switch (cat) {
+			case 'animals':
+				pool = [...ANIMAL_EMOJIS];
+				break;
+			case 'nature':
+				pool = [...NATURE_EMOJIS];
+				break;
+			case 'household':
+				pool = [...HOUSEHOLD_EMOJIS];
+				break;
+			case 'mixed': {
+				pool = [...ANIMAL_EMOJIS, ...NATURE_EMOJIS, ...HOUSEHOLD_EMOJIS];
+				for (let i = pool.length - 1; i > 0; i--) {
+					const j = Math.floor(Math.random() * (i + 1));
+					[pool[i], pool[j]] = [pool[j], pool[i]];
+				}
+				break;
 			}
-
-			// Using loremflickr.com for category-specific photos.
-			// The 'lock' parameter ensures we get a unique but consistent image for each index.
-			// We add a random salt to the lock to get different images each time the game starts.
-			const sessionSalt = Math.floor(Math.random() * 1000);
-			urls.push(`https://loremflickr.com/400/400/${currentCat}?lock=${i + sessionSalt}`);
 		}
 
-		return urls;
+		// Shuffle so each game session uses different emojis
+		for (let i = pool.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[pool[i], pool[j]] = [pool[j], pool[i]];
+		}
+
+		return pool.slice(0, count);
 	}
 }
 
