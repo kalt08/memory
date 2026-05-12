@@ -56,7 +56,7 @@
 		<!-- Game Grid -->
 		<div class="flex min-h-0 flex-1 items-center justify-center">
 			<Grid
-				columns={gameState.difficulty === 'easy' ? 4 : 6}
+				columns={gameState.difficulty === 'easy' ? 4 : gameState.difficulty === 'medium' ? 6 : 10}
 			>
 				{#each gameState.cards as card (card.id)}
 					<Card {card} onclick={() => gameState.flipCard(card)} />
