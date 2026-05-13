@@ -27,7 +27,7 @@
 				<span class="relative z-10 text-7xl select-none">
 					{#if gameState.mode === 'bot'}
 						{gameState.playerScores.player > gameState.playerScores.bot ? '👑' : 
-						 gameState.playerScores.player < gameState.playerScores.bot ? '🦾' : '🤝'}
+						 gameState.playerScores.player < gameState.playerScores.bot ? '🤖' : '🤝'}
 					{:else}
 						👑
 					{/if}
