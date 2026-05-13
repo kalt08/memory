@@ -78,7 +78,13 @@
 				columns={gameState.difficulty === 'easy' ? 4 : gameState.difficulty === 'medium' ? 6 : 10}
 			>
 				{#each gameState.cards as card (card.id)}
-					<Card {card} onclick={() => gameState.flipCard(card)} />
+					<Card 
+						{card} 
+						onclick={() => {
+							if (gameState.mode === 'bot' && gameState.currentPlayer === 'bot') return;
+							gameState.flipCard(card);
+						}} 
+					/>
 				{/each}
 			</Grid>
 		</div>
