@@ -6,6 +6,7 @@
 	import GameScreen from '$lib/components/screens/GameScreen.svelte';
 	import VictoryScreen from '$lib/components/screens/VictoryScreen.svelte';
 	import AuthScreen from '$lib/components/screens/AuthScreen.svelte';
+	import ModeScreen from '$lib/components/screens/ModeScreen.svelte';
 </script>
 
 <svelte:head>
@@ -23,6 +24,8 @@
 		<CategoryScreen />
 	{:else if appState.currentScreen === 'difficulty'}
 		<DifficultyScreen />
+	{:else if appState.currentScreen === 'mode'}
+		<ModeScreen />
 	{:else if appState.currentScreen === 'game'}
 		<GameScreen />
 	{:else if appState.currentScreen === 'victory'}
