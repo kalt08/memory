@@ -107,11 +107,11 @@ class GameState {
 		this.isBotThinking = true;
 		// Small delay before bot starts moving
 		await new Promise((resolve) => setTimeout(resolve, 1200));
-		this.performBotMove();
+		await this.performBotMove();
 		this.isBotThinking = false;
 	}
 
-	private performBotMove() {
+	private async performBotMove() {
 		if (!this.isPlaying || this.currentPlayer !== 'bot') return;
 
 		const unmatchedCards = this.cards.filter((c) => !c.isMatched && !c.isFlipped);
@@ -121,7 +121,6 @@ class GameState {
 		let firstCard: Card | null = null;
 		let secondCard: Card | null = null;
 
-		// Try to find two cards in memory with the same pairId
 		const memoryEntries = Array.from(this.botMemory.entries());
 		for (let i = 0; i < memoryEntries.length; i++) {
 			for (let j = i + 1; j < memoryEntries.length; j++) {
@@ -141,25 +140,30 @@ class GameState {
 
 		if (firstCard && secondCard) {
 			this.flipCard(firstCard);
-			setTimeout(() => this.flipCard(secondCard!), 600);
+			await new Promise((resolve) => setTimeout(resolve, 800));
+			this.flipCard(secondCard);
 		} else {
 			// 2. Pick a random card
 			const random1 = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)];
 			this.flipCard(random1);
+
+			await new Promise((resolve) => setTimeout(resolve, 800));
 
 			// 3. Check if we now know where the match is
 			const matchId = Array.from(this.botMemory.entries()).find(
 				([id, pId]) => pId === random1.pairId && id !== random1.id && !this.cards.find((c) => c.id === id)?.isMatched
 			)?.[0];
 
-			setTimeout(() => {
-				const remainingUnmatched = this.cards.filter((c) => !c.isMatched && !c.isFlipped);
-				const random2 = matchId
-					? this.cards.find((c) => c.id === matchId)!
-					: remainingUnmatched[Math.floor(Math.random() * remainingUnmatched.length)];
-				this.flipCard(random2);
-			}, 800);
+			const remainingUnmatched = this.cards.filter((c) => !c.isMatched && !c.isFlipped);
+			const random2 = matchId
+				? this.cards.find((c) => c.id === matchId)!
+				: remainingUnmatched[Math.floor(Math.random() * remainingUnmatched.length)];
+			
+			if (random2) this.flipCard(random2);
 		}
+
+		// Wait for the match check processing to finish before we potentially trigger another turn
+		await new Promise((resolve) => setTimeout(resolve, 1200));
 	}
 
 	private checkMatch() {
