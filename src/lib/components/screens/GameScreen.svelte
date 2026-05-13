@@ -31,26 +31,45 @@
 
 	<main class="mx-auto flex w-full flex-1 flex-col overflow-hidden pb-2">
 		<!-- HUD (Heads Up Display) -->
-		<div class="mx-auto mt-1 mb-3 flex w-full max-w-md items-center justify-between px-6">
-			<div class="flex flex-col">
-				<span
-					class="text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
-					>Moves</span
-				>
-				<span class="font-display text-2xl font-bold text-[var(--color-on-surface)]"
-					>{gameState.moves}</span
-				>
-			</div>
+		<div class="mx-auto mt-1 mb-6 flex w-full max-w-md items-center justify-between px-6">
+			{#if gameState.mode === 'solo'}
+				<div class="flex flex-col">
+					<span class="text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase">Moves</span>
+					<span class="font-display text-2xl font-bold text-[var(--color-on-surface)]">{gameState.moves}</span>
+				</div>
 
-			<div class="flex flex-col items-end">
-				<span
-					class="text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
-					>Time</span
-				>
-				<span class="font-display text-2xl font-bold text-[var(--color-on-surface)]"
-					>{formatTime(gameState.timeSeconds)}</span
-				>
-			</div>
+				<div class="flex flex-col items-end">
+					<span class="text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase">Time</span>
+					<span class="font-display text-2xl font-bold text-[var(--color-on-surface)]">{formatTime(gameState.timeSeconds)}</span>
+				</div>
+			{:else}
+				<!-- VS Bot HUD -->
+				<div class="flex flex-1 items-center justify-between gap-4">
+					<div class="flex flex-col items-center gap-1 transition-all duration-300 {gameState.currentPlayer === 'player' ? 'scale-110' : 'opacity-50'}">
+						<span class="text-[10px] font-bold tracking-widest text-[var(--color-primary)] uppercase">Player</span>
+						<div class="flex h-12 w-16 items-center justify-center rounded-2xl bg-[var(--color-primary-container)]/20 font-display text-2xl font-bold text-[var(--color-primary)]">
+							{gameState.playerScores.player}
+						</div>
+						{#if gameState.currentPlayer === 'player'}
+							<div class="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]"></div>
+						{/if}
+					</div>
+
+					<div class="flex flex-col items-center">
+						<span class="text-[10px] font-bold text-[var(--color-on-surface-variant)] uppercase italic">vs</span>
+					</div>
+
+					<div class="flex flex-col items-center gap-1 transition-all duration-300 {gameState.currentPlayer === 'bot' ? 'scale-110' : 'opacity-50'}">
+						<span class="text-[10px] font-bold tracking-widest text-[var(--color-secondary, #9c4046)] uppercase">Bot</span>
+						<div class="flex h-12 w-16 items-center justify-center rounded-2xl bg-[var(--color-secondary-container, #ffdada)]/20 font-display text-2xl font-bold text-[var(--color-secondary, #9c4046)]">
+							{gameState.playerScores.bot}
+						</div>
+						{#if gameState.currentPlayer === 'bot'}
+							<div class="h-1.5 w-1.5 rounded-full bg-[var(--color-secondary, #9c4046)]"></div>
+						{/if}
+					</div>
+				</div>
+			{/if}
 		</div>
 
 		<!-- Game Grid -->
