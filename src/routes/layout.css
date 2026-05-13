@@ -27,6 +27,9 @@
 	}
 
 	.dark {
+		--color-primary: #8deedb;
+		--color-primary-container: #005045;
+		--color-on-primary: #00372f;
 		--color-surface: #121212;
 		--color-surface-container-low: #1e1e1e;
 		--color-surface-container: #2c2f2f;
