@@ -14,7 +14,7 @@
 		) {
 			// Delay slightly so the user sees the last match before screen change
 			setTimeout(() => {
-				appState.goTo('victory');
+				appState.goTo('result');
 			}, 800);
 		}
 	});
