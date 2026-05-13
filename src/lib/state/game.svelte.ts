@@ -82,11 +82,6 @@ class GameState {
 			return;
 		}
 
-		// Prevent player from flipping during bot turn
-		if (this.mode === 'bot' && this.currentPlayer === 'bot' && !this.isBotThinking) {
-			return;
-		}
-
 		card.isFlipped = true;
 		this.currentlyFlipped.push(card);
 
@@ -99,16 +94,12 @@ class GameState {
 		}
 	}
 
-	private isBotThinking = false;
-
 	private async triggerBotTurn() {
 		if (this.mode !== 'bot' || this.currentPlayer !== 'bot' || !this.isPlaying) return;
 
-		this.isBotThinking = true;
 		// Small delay before bot starts moving
 		await new Promise((resolve) => setTimeout(resolve, 1200));
 		await this.performBotMove();
-		this.isBotThinking = false;
 	}
 
 	private async performBotMove() {
