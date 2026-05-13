@@ -31,27 +31,38 @@ const HOUSEHOLD_EMOJIS = [
 	'🪣', '🧴', '🪥', '🧽', '🫖', '🍶', '🪤', '🧊'
 ];
 
+export type GameMode = 'solo' | 'bot';
+export type Player = 'player' | 'bot';
+
 class GameState {
 	difficulty = $state<Difficulty>('easy');
 	category = $state<Category>('animals');
+	mode = $state<GameMode>('solo');
 	cards = $state<Card[]>([]);
 	moves = $state(0);
 	timeSeconds = $state(0);
 	isPlaying = $state(false);
+	currentPlayer = $state<Player>('player');
+	playerScores = $state({ player: 0, bot: 0 });
 
 	private timer: ReturnType<typeof setInterval> | null = null;
 	private currentlyFlipped: Card[] = [];
 	private isProcessing = false;
+	private botMemory = new Map<string, string>(); // pairId -> cardId
 
-	start(difficulty: Difficulty, category: Category) {
+	start(difficulty: Difficulty, category: Category, mode: GameMode = 'solo') {
 		this.difficulty = difficulty;
 		this.category = category;
+		this.mode = mode;
 		this.moves = 0;
 		this.timeSeconds = 0;
 		this.cards = this.generateCards(difficulty, category);
 		this.currentlyFlipped = [];
 		this.isProcessing = false;
 		this.isPlaying = true;
+		this.currentPlayer = 'player';
+		this.playerScores = { player: 0, bot: 0 };
+		this.botMemory.clear();
 		this.startTimer();
 	}
 
@@ -71,12 +82,83 @@ class GameState {
 			return;
 		}
 
+		// Prevent player from flipping during bot turn
+		if (this.mode === 'bot' && this.currentPlayer === 'bot' && !this.isBotThinking) {
+			return;
+		}
+
 		card.isFlipped = true;
 		this.currentlyFlipped.push(card);
+
+		// Bot "remembers" cards it sees
+		this.botMemory.set(card.id, card.pairId);
 
 		if (this.currentlyFlipped.length === 2) {
 			this.moves++;
 			this.checkMatch();
+		}
+	}
+
+	private isBotThinking = false;
+
+	private async triggerBotTurn() {
+		if (this.mode !== 'bot' || this.currentPlayer !== 'bot' || !this.isPlaying) return;
+
+		this.isBotThinking = true;
+		// Small delay before bot starts moving
+		await new Promise((resolve) => setTimeout(resolve, 1200));
+		this.performBotMove();
+		this.isBotThinking = false;
+	}
+
+	private performBotMove() {
+		if (!this.isPlaying || this.currentPlayer !== 'bot') return;
+
+		const unmatchedCards = this.cards.filter((c) => !c.isMatched && !c.isFlipped);
+		if (unmatchedCards.length === 0) return;
+
+		// 1. Check memory for a match
+		let firstCard: Card | null = null;
+		let secondCard: Card | null = null;
+
+		// Try to find two cards in memory with the same pairId
+		const memoryEntries = Array.from(this.botMemory.entries());
+		for (let i = 0; i < memoryEntries.length; i++) {
+			for (let j = i + 1; j < memoryEntries.length; j++) {
+				const [id1, p1] = memoryEntries[i];
+				const [id2, p2] = memoryEntries[j];
+				const c1 = this.cards.find((c) => c.id === id1 && !c.isMatched);
+				const c2 = this.cards.find((c) => c.id === id2 && !c.isMatched);
+
+				if (p1 === p2 && c1 && c2) {
+					firstCard = c1;
+					secondCard = c2;
+					break;
+				}
+			}
+			if (firstCard) break;
+		}
+
+		if (firstCard && secondCard) {
+			this.flipCard(firstCard);
+			setTimeout(() => this.flipCard(secondCard!), 600);
+		} else {
+			// 2. Pick a random card
+			const random1 = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)];
+			this.flipCard(random1);
+
+			// 3. Check if we now know where the match is
+			const matchId = Array.from(this.botMemory.entries()).find(
+				([id, pId]) => pId === random1.pairId && id !== random1.id && !this.cards.find((c) => c.id === id)?.isMatched
+			)?.[0];
+
+			setTimeout(() => {
+				const remainingUnmatched = this.cards.filter((c) => !c.isMatched && !c.isFlipped);
+				const random2 = matchId
+					? this.cards.find((c) => c.id === matchId)!
+					: remainingUnmatched[Math.floor(Math.random() * remainingUnmatched.length)];
+				this.flipCard(random2);
+			}, 800);
 		}
 	}
 
@@ -87,25 +169,39 @@ class GameState {
 		if (card1.pairId === card2.pairId) {
 			card1.isMatched = true;
 			card2.isMatched = true;
+			this.playerScores[this.currentPlayer]++;
 			this.currentlyFlipped = [];
 			this.isProcessing = false;
-			this.checkWin();
+			
+			const hasWon = this.checkWin();
+			if (!hasWon && this.mode === 'bot' && this.currentPlayer === 'bot') {
+				this.triggerBotTurn();
+			}
 		} else {
 			setTimeout(() => {
 				card1.isFlipped = false;
 				card2.isFlipped = false;
 				this.currentlyFlipped = [];
 				this.isProcessing = false;
+
+				if (this.mode === 'bot') {
+					this.currentPlayer = this.currentPlayer === 'player' ? 'bot' : 'player';
+					if (this.currentPlayer === 'bot') {
+						this.triggerBotTurn();
+					}
+				}
 			}, 1000);
 		}
 	}
 
-	private checkWin() {
+	private checkWin(): boolean {
 		const hasWon = this.cards.every((c) => c.isMatched);
 		if (hasWon) {
 			this.stopTimer();
 			this.isPlaying = false;
+			return true;
 		}
+		return false;
 	}
 
 	private startTimer() {
