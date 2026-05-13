@@ -46,35 +46,64 @@
 				<h1
 					class="font-display text-5xl font-extrabold tracking-tight text-[var(--color-on-surface)]"
 				>
-					Level<br />Cleared
+					{#if gameState.mode === 'bot'}
+						{gameState.playerScores.player > gameState.playerScores.bot ? 'You Won!' : 
+						 gameState.playerScores.player < gameState.playerScores.bot ? 'Bot Won!' : 'It\'s a Tie!'}
+					{:else}
+						Level<br />Cleared
+					{/if}
 				</h1>
 				<p class="mt-2 text-lg font-medium text-[var(--color-on-surface-variant)]">
-					You mastered the {gameState.difficulty} grid!
+					{gameState.mode === 'bot' 
+						? `Final Score: ${gameState.playerScores.player} vs ${gameState.playerScores.bot}`
+						: `You mastered the ${gameState.difficulty} grid!`}
 				</p>
 			</div>
 
 			<div
 				class="flex w-full justify-center gap-8 rounded-3xl bg-[var(--color-surface-container-low)] px-8 py-6 shadow-sm"
 			>
-				<div class="flex flex-col items-center">
-					<span
-						class="mb-1 text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
-						>Moves</span
-					>
-					<span class="font-display text-3xl font-bold text-[var(--color-primary)]"
-						>{gameState.moves}</span
-					>
-				</div>
-				<div class="w-px bg-[var(--color-outline-variant)]/30"></div>
-				<div class="flex flex-col items-center">
-					<span
-						class="mb-1 text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
-						>Time</span
-					>
-					<span class="font-display text-3xl font-bold text-[var(--color-primary)]"
-						>{formatTime(gameState.timeSeconds)}</span
-					>
-				</div>
+				{#if gameState.mode === 'solo'}
+					<div class="flex flex-col items-center">
+						<span
+							class="mb-1 text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
+							>Moves</span
+						>
+						<span class="font-display text-3xl font-bold text-[var(--color-primary)]"
+							>{gameState.moves}</span
+						>
+					</div>
+					<div class="w-px bg-[var(--color-outline-variant)]/30"></div>
+					<div class="flex flex-col items-center">
+						<span
+							class="mb-1 text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
+							>Time</span
+						>
+						<span class="font-display text-3xl font-bold text-[var(--color-primary)]"
+							>{formatTime(gameState.timeSeconds)}</span
+						>
+					</div>
+				{:else}
+					<div class="flex flex-col items-center">
+						<span
+							class="mb-1 text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
+							>You</span
+						>
+						<span class="font-display text-3xl font-bold text-[var(--color-primary)]"
+							>{gameState.playerScores.player}</span
+						>
+					</div>
+					<div class="w-px bg-[var(--color-outline-variant)]/30"></div>
+					<div class="flex flex-col items-center">
+						<span
+							class="mb-1 text-xs font-bold tracking-widest text-[var(--color-on-surface-variant)] uppercase"
+							>Bot</span
+						>
+						<span class="font-display text-3xl font-bold text-[var(--color-secondary, #9c4046)]"
+							>{gameState.playerScores.bot}</span
+						>
+					</div>
+				{/if}
 			</div>
 
 			<Button variant="primary" onclick={() => appState.goTo('home')} class="mt-4 w-full text-lg">
