@@ -29,8 +29,41 @@ class AppState {
 		}
 	}
 
-	goTo(screen: Screen) {
+	goTo(screen: Screen, replace = false) {
 		this.currentScreen = screen;
+
+		if (typeof window !== 'undefined' && window.history) {
+			const path = screen === 'home' ? '' : screen === 'category' ? 'choose-category' : screen;
+			const currentPath = window.location.pathname;
+			// GitHub Pages base path logic
+			const base = currentPath.startsWith('/memory') ? '/memory' : '';
+			const newUrl = screen === 'home' ? (base || '/') : `${base}/${path}`;
+
+			if (replace) {
+				window.history.replaceState({ screen }, '', newUrl);
+			} else {
+				window.history.pushState({ screen }, '', newUrl);
+			}
+		}
+	}
+
+	initRouter() {
+		if (typeof window !== 'undefined') {
+			window.addEventListener('popstate', (event) => {
+				if (event.state && event.state.screen) {
+					this.currentScreen = event.state.screen;
+				}
+			});
+
+			const path = window.location.pathname;
+			if (path.includes('choose-category')) this.currentScreen = 'category';
+			else if (path.includes('difficulty')) this.currentScreen = 'difficulty';
+			else if (path.includes('game')) this.currentScreen = 'game';
+			else if (path.includes('victory')) this.currentScreen = 'victory';
+			else if (path.includes('auth')) this.currentScreen = 'auth';
+
+			window.history.replaceState({ screen: this.currentScreen }, '', window.location.href);
+		}
 	}
 
 	toggleTheme() {
@@ -53,3 +86,4 @@ class AppState {
 }
 
 export const appState = new AppState();
+appState.initRouter();
