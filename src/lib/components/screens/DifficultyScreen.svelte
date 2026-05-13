@@ -10,8 +10,8 @@
 	];
 
 	function selectDifficulty(diff: Difficulty) {
-		gameState.start(diff, gameState.category);
-		appState.goTo('game');
+		gameState.difficulty = diff;
+		appState.goTo('mode');
 	}
 </script>
 
