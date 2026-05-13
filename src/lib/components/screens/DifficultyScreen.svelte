@@ -6,7 +6,7 @@
 	const difficulties: { id: Difficulty; label: string; desc: string; size: string }[] = [
 		{ id: 'easy', label: 'Easy', desc: 'A quick warm-up session.', size: '4x4' },
 		{ id: 'medium', label: 'Medium', desc: 'The classic memory challenge.', size: '6x6' },
-		{ id: 'hard', label: 'Hard', desc: 'For true memory masters.', size: '8x8' }
+		{ id: 'hard', label: 'Hard', desc: 'For true memory masters.', size: '10x6' }
 	];
 
 	function selectDifficulty(diff: Difficulty) {
