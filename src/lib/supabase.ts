@@ -7,7 +7,11 @@ export const supabase = createClient(
 	PUBLIC_SUPABASE_ANON_KEY || 'placeholder',
 	{
 		auth: {
-			storage: typeof window !== 'undefined' ? window.sessionStorage : undefined,
+			storage: typeof window !== 'undefined' ? {
+				getItem: (key) => window.sessionStorage.getItem(key),
+				setItem: (key, value) => window.sessionStorage.setItem(key, value),
+				removeItem: (key) => window.sessionStorage.removeItem(key)
+			} : undefined,
 			autoRefreshToken: true,
 			persistSession: true,
 			detectSessionInUrl: true
