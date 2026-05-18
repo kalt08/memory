@@ -1,7 +1,7 @@
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '$lib/supabase';
 
-export type Screen = 'home' | 'category' | 'difficulty' | 'mode' | 'game' | 'result' | 'auth';
+export type Screen = 'home' | 'category' | 'difficulty' | 'mode' | 'game' | 'result' | 'auth' | 'leaderboard';
 export type Theme = 'light' | 'dark';
 
 class AppState {
@@ -61,6 +61,7 @@ class AppState {
 			else if (path.includes('mode')) this.currentScreen = 'mode';
 			else if (path.includes('game')) this.currentScreen = 'game';
 			else if (path.includes('result')) this.currentScreen = 'result';
+			else if (path.includes('leaderboard')) this.currentScreen = 'leaderboard';
 			else if (path.includes('auth')) this.currentScreen = 'auth';
 
 			window.history.replaceState({ screen: this.currentScreen }, '', window.location.href);
