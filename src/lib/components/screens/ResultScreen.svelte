@@ -3,6 +3,40 @@
 	import Header from '$lib/components/ui/Header.svelte';
 	import { appState } from '$lib/state/app.svelte';
 	import { gameState } from '$lib/state/game.svelte';
+	import { supabase } from '$lib/supabase';
+
+	let saveStatus = $state<'saving' | 'saved' | 'error' | 'guest' | 'not_applicable'>('not_applicable');
+	let hasAttemptedSave = $state(false);
+
+	$effect(() => {
+		if (gameState.mode === 'solo' && !hasAttemptedSave) {
+			hasAttemptedSave = true;
+			if (appState.user) {
+				saveStatus = 'saving';
+				saveScore();
+			} else {
+				saveStatus = 'guest';
+			}
+		}
+	});
+
+	async function saveScore() {
+		const username = appState.user?.user_metadata?.username || appState.user?.user_metadata?.full_name || 'Anonymous';
+		const { error } = await supabase.from('scores').insert({
+			user_id: appState.user!.id,
+			username: username,
+			difficulty: gameState.difficulty,
+			moves: gameState.moves,
+			time_seconds: gameState.timeSeconds
+		});
+
+		if (error) {
+			console.error('Failed to save score:', error);
+			saveStatus = 'error';
+		} else {
+			saveStatus = 'saved';
+		}
+	}
 
 	function formatTime(seconds: number): string {
 		const mins = Math.floor(seconds / 60);
@@ -98,7 +132,29 @@
 				{/if}
 			</div>
 
-			<Button variant="primary" onclick={() => appState.goTo('home')} class="mt-4 w-full text-lg">
+			{#if gameState.mode === 'solo'}
+				<div class="flex h-6 items-center justify-center text-sm font-medium">
+					{#if saveStatus === 'saving'}
+						<span class="text-[var(--color-on-surface-variant)]">Saving score...</span>
+					{:else if saveStatus === 'saved'}
+						<span class="text-green-600 dark:text-green-400">✅ Score saved to leaderboard!</span>
+					{:else if saveStatus === 'error'}
+						<span class="text-red-500">Failed to save score.</span>
+					{:else if saveStatus === 'guest'}
+						<div class="flex items-center gap-2">
+							<span class="text-[var(--color-on-surface-variant)]">Sign in to save your score!</span>
+							<button 
+								class="text-[var(--color-primary)] hover:underline"
+								onclick={() => appState.goTo('auth')}
+							>
+								Sign In
+							</button>
+						</div>
+					{/if}
+				</div>
+			{/if}
+
+			<Button variant="primary" onclick={() => appState.goTo('home')} class="mt-2 w-full text-lg">
 				Play Again
 			</Button>
 		</div>
