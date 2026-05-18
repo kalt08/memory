@@ -4,5 +4,13 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/publi
 // Providing fallbacks to prevent top-level crashes if env vars are missing during initial dev load
 export const supabase = createClient(
 	PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-	PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
+	PUBLIC_SUPABASE_ANON_KEY || 'placeholder',
+	{
+		auth: {
+			storage: typeof window !== 'undefined' ? window.sessionStorage : undefined,
+			autoRefreshToken: true,
+			persistSession: true,
+			detectSessionInUrl: true
+		}
+	}
 );
