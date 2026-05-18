@@ -7,6 +7,7 @@
 	import ResultScreen from '$lib/components/screens/ResultScreen.svelte';
 	import AuthScreen from '$lib/components/screens/AuthScreen.svelte';
 	import ModeScreen from '$lib/components/screens/ModeScreen.svelte';
+	import LeaderboardScreen from '$lib/components/screens/LeaderboardScreen.svelte';
 </script>
 
 <svelte:head>
@@ -30,5 +31,7 @@
 		<GameScreen />
 	{:else if appState.currentScreen === 'result'}
 		<ResultScreen />
+	{:else if appState.currentScreen === 'leaderboard'}
+		<LeaderboardScreen />
 	{/if}
 </div>
