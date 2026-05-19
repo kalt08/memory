@@ -154,9 +154,14 @@
 				</div>
 			{/if}
 
-			<Button variant="primary" onclick={() => appState.goTo('home')} class="mt-2 w-full text-lg">
-				Play Again
-			</Button>
+			<div class="mt-2 flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
+				<Button variant="primary" onclick={() => appState.goTo('home')} class="w-full text-lg sm:w-auto">
+					Play Again
+				</Button>
+				<Button variant="secondary" onclick={() => appState.goTo('leaderboard')} class="w-full text-lg sm:w-auto">
+					🏆 Leaderboard
+				</Button>
+			</div>
 		</div>
 	</main>
 </div>
