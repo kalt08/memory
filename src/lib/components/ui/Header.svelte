@@ -18,8 +18,14 @@
 			case 'game':
 				appState.goTo('mode');
 				break;
-			case 'result':
 			case 'leaderboard':
+				if (appState.previousScreen === 'result') {
+					appState.goTo('result');
+				} else {
+					appState.goTo('home');
+				}
+				break;
+			case 'result':
 			case 'auth':
 			default:
 				appState.goTo('home');
