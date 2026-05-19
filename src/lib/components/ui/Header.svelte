@@ -5,22 +5,10 @@
 	let { title, showBack = false }: { title: string; showBack?: boolean } = $props();
 
 	function handleBack() {
-		// Define the flow
-		switch (appState.currentScreen) {
-			case 'category':
-				appState.goTo('home');
-				break;
-			case 'difficulty':
-				appState.goTo('category');
-				break;
-			case 'game':
-				appState.goTo('difficulty');
-				break;
-			case 'victory':
-				appState.goTo('home');
-				break;
-			default:
-				appState.goTo('home');
+		if (appState.currentScreen === 'result') {
+			appState.goTo('home');
+		} else {
+			window.history.back();
 		}
 	}
 </script>
