@@ -6,6 +6,7 @@ export type Theme = 'light' | 'dark';
 
 class AppState {
 	currentScreen = $state<Screen>('home');
+	previousScreen = $state<Screen | null>(null);
 	theme = $state<Theme>('light');
 	user = $state<User | null>(null);
 
@@ -30,6 +31,9 @@ class AppState {
 	}
 
 	goTo(screen: Screen, replace = false) {
+		if (!replace) {
+			this.previousScreen = this.currentScreen;
+		}
 		this.currentScreen = screen;
 
 		if (typeof window !== 'undefined' && window.history) {
