@@ -14,7 +14,7 @@
 	async function fetchScores(diff: string) {
 		loading = true;
 		const { data, error } = await supabase
-			.from('scores')
+			.from('leaderboard_best_scores')
 			.select('*')
 			.eq('difficulty', diff)
 			.order('moves', { ascending: true })
